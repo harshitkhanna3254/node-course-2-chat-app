@@ -18,17 +18,22 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log("New User Connected");
 
-    socket.emit('newMessage', {
-        from: 'Sugandh Goyal',
-        text:'Yo Nigger!',
-        createdAt: 911
-    }); //Emitting a new event. Listened by client. Not a listener so not providing a callback like in client side
-        //Also, we can trigget this event without sending any data. To send data, we  just add another arguement which wil be an object
+    // socket.emit('newMessage', {
+    //     from: 'Sugandh Goyal',
+    //     text:'Yo Nigger!',
+    //     createdAt: 911
+    // }); //Emitting a new event. Listened by client. Not a listener so not providing a callback like in client side
+    //     //Also, we can trigget this event without sending any data. To send data, we  just add another arguement which wil be an object
 
 
     socket.on('createMessage', (message) => {
         console.log("New message received from client to server. The details are :: ",message);
-    })
+        io.emit('newMessage',{      // socket.emit() is for a single socket. io.emit() isfor every socket/window/user.
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()  // for getting the time stamp 
+        });
+    });
 
   socket.on('disconnect', () => {
   console.log("User was disconnected")

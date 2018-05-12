@@ -3,11 +3,11 @@ var socket = io(); //we are making a req from client to server to open up a web 
         socket.on('connect', () => {
                 console.log("Connected to server");
 
-                socket.emit('createMessage',{
+                // socket.emit('createMessage',{
 
-                    to: 'jenny',
-                    text: "ssup nigga? ... via createMessage"
-                })
+                //     from: 'jenny',
+                //     text: "ssup nigga? ... via createMessage"
+                // })
         });
 
         socket.on('disconnect' , () => {
