@@ -4,7 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 var app = express();
 var server = http.createServer(app);
-
+const {generateMessage} = require('./utils/message');
 //here we are configuring the server to also include socketIO. This is the reason we changed from express server to http server.
 var io = socketIO(server); //  
 
@@ -17,7 +17,6 @@ app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
   console.log("New User Connected");
-
     // socket.emit('newMessage', {
     //     from: 'Sugandh Goyal',
     //     text:'Yo Nigger!',
@@ -25,14 +24,20 @@ io.on('connection', (socket) => {
     // }); //Emitting a new event. Listened by client. Not a listener so not providing a callback like in client side
     //     //Also, we can trigget this event without sending any data. To send data, we  just add another arguement which wil be an object
 
+    socket.emit('newMessage', generateMessage('Admin','Welcome to the chat app'));
+
+    socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user connected'))
 
     socket.on('createMessage', (message) => {
         console.log("New message received from client to server. The details are :: ",message);
-        io.emit('newMessage',{      // socket.emit() is for a single socket. io.emit() isfor every socket/window/user.
-            from: message.from,
-            text: message.text,
-            createdAt: new Date().getTime()  // for getting the time stamp 
-        });
+        io.emit('newMessage',generateMessage(message.from, message.text));          // socket.emit() is for a single socket. io.emit() isfor every socket/window/user.
+
+        //broadcast is an object. It has it's own emit() function. It wil emit the event to everyone but that socket.
+        // socket.broadcast.emit('newMessage',{
+        //      from: message.from,
+        //      text: message.text,
+        //      createdAt: new Date().getTime()  // for getting the time stamp
+        // })
     });
 
   socket.on('disconnect', () => {
