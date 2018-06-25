@@ -27,8 +27,8 @@ var socket = io(); //we are making a req from client to server to open up a web 
             console.log("New Message received from server. The details are : \n", message) //this is the object and will contain the data send from server side and we are sending it as second arguement. 
         })
 
-        socket.emit('createMessage', {
-            from: 'createMessage User',
-            text: "To Everyone!"
-        })
+        // socket.emit('createMessage', {
+        //     from: 'createMessage User',
+        //     text: "To Everyone!"
+        // })
         
