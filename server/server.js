@@ -24,13 +24,10 @@ io.on('connection', (socket) => {
     // }); //Emitting a new event. Listened by client. Not a listener so not providing a callback like in client side
     //     //Also, we can trigget this event without sending any data. To send data, we  just add another arguement which wil be an object
 
-    socket.emit('newMessage', generateMessage('Admin','Welcome to the chat app'));
-
-    socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user connected'))
-
     socket.on('createMessage', (message) => {
-        console.log("New message received from client to server. The details are :: ",message);
-        io.emit('newMessage',generateMessage(message.from, message.text));          // socket.emit() is for a single socket. io.emit() isfor every socket/window/user.
+        console.log("New message received from client to server. The details are : ", message);
+
+        io.emit('newMessage',generateMessage(message.from,message.text)) // socket.emit() is for a single socket. io.emit() isfor every socket/window/user.
 
         //broadcast is an object. It has it's own emit() function. It wil emit the event to everyone but that socket.
         // socket.broadcast.emit('newMessage',{
