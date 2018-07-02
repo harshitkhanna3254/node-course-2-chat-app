@@ -5,6 +5,8 @@ const socketIO = require('socket.io');
 var app = express();
 var server = http.createServer(app);
 const {generateMessage} = require('./utils/message');
+const {generateLocationMessage} = require('./utils/message');
+
 //here we are configuring the server to also include socketIO. This is the reason we changed from express server to http server.
 var io = socketIO(server); //  
 
@@ -25,18 +27,12 @@ io.on('connection', (socket) => {
         console.log("New message received from client to server. The details are : ", message);
 
          io.emit('newMessage',generateMessage(message.from,message.text)) // socket.emit() is for a single socket. io.emit() isfor every socket/window/user.
-         callback('This is from the server');
-        // socket.broadcast.emit('newMessage', generateMessage(message.from,message.text))
-
-        //broadcast is an object. It has it's own emit() function. It wil emit the event to everyone but that socket.
-        // socket.broadcast.emit('newMessage',{
-        //      from: message.from,
-        //      text: message.text,
-        //      createdAt: new Date().getTime()  // for getting the time stamp
-        // })
-
-
+         callback();
     });
+
+    socket.on('createLocationMessage', (coords) => {
+            io.emit('newLocationMessage',generateLocationMessage('Admin', coords.latitude, coords.longitude))
+    })
 
   socket.on('disconnect', () => {
   console.log("User was disconnected")
