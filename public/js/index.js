@@ -9,28 +9,31 @@ var socket = io(); //we are making a req from client to server to open up a web 
         })
 
         socket.on('newMessage', (message) => {
-            console.log("New Message received from server. The details are : \n", message) //this is the object and will contain the data send from server side and we are sending it as second arguement. 
             
+            var formattedTime = moment(message.createdAt).format('h:mm A')
             var li = jQuery('<li></li>');
-            li.text(`${message.from} : ${message.text}`);
-
+            li.text(`${message.from} ${formattedTime} : ${message.text}`);
             jQuery('#message-list').append(li);
-        })
+
+        });
+
 
         socket.on('newLocationMessage', (message) => {
+    
+            var formattedTime = moment(message.createdAt).format('h:mm A')
 
-            var li = jQuery('<li></li>');
+            var li = jQuery('<li></li>')
+
             var a = jQuery('<a target="_blank">My current location</a>')
 
-            li.text(`${message.from} : `)
+            li.text(`${message.from} ${formattedTime}: `)
             a.attr('href', message.url)
 
             li.append(a);
             jQuery('#message-list').append(li);
         });      
 
-
-
+    
         jQuery('#message-form').on('submit', (e) => {
             e.preventDefault(); // we have prevented default behaviour with this
 
