@@ -9,28 +9,30 @@ var socket = io(); //we are making a req from client to server to open up a web 
         })
 
         socket.on('newMessage', (message) => {
-            
-            var formattedTime = moment(message.createdAt).format('h:mm A')
-            var li = jQuery('<li></li>');
-            li.text(`${message.from} ${formattedTime} : ${message.text}`);
-            jQuery('#message-list').append(li);
 
+            var formattedTime = moment(message.createdAt).format('h:mm A');
+
+            var template = jQuery('#message-template').html();
+            var html = Mustache.render(template,{
+                text: message.text,
+                from: message.from,
+                createdAt: formattedTime
+            });
+
+            jQuery('#message-list').append(html)
         });
 
 
         socket.on('newLocationMessage', (message) => {
     
-            var formattedTime = moment(message.createdAt).format('h:mm A')
-
-            var li = jQuery('<li></li>')
-
-            var a = jQuery('<a target="_blank">My current location</a>')
-
-            li.text(`${message.from} ${formattedTime}: `)
-            a.attr('href', message.url)
-
-            li.append(a);
-            jQuery('#message-list').append(li);
+            var formattedTime = moment(message.createdAt).format('h:mm A');
+            var template = jQuery('#location-message-template').html();
+            var html = Mustache.render(template,{
+                    from: message.from,
+                    url: message.url,
+                    createdAt: formattedTime
+            })
+            jQuery('#message-list').append(html);
         });      
 
     
